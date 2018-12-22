@@ -53,7 +53,7 @@ namespace Freenom_Dns_Updater
             else
             {
 
-                MessageBox.Show(Directory.GetCurrentDirectory()+ config + " not found.");
+                MessageBox.Show(Directory.GetCurrentDirectory()+" "+ config + " not found. Press Save to create the config");
             }
 
         }
