@@ -50,11 +50,14 @@
             this.lbl_logs = new System.Windows.Forms.Label();
             this.lst_logs = new System.Windows.Forms.ListBox();
             this.lbl_version = new System.Windows.Forms.Label();
+            this.txt_domain = new System.Windows.Forms.TextBox();
+            this.lbl_domain = new System.Windows.Forms.Label();
+            this.btn_save = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btn_change
             // 
-            this.btn_change.Location = new System.Drawing.Point(12, 388);
+            this.btn_change.Location = new System.Drawing.Point(11, 248);
             this.btn_change.Name = "btn_change";
             this.btn_change.Size = new System.Drawing.Size(300, 50);
             this.btn_change.TabIndex = 0;
@@ -128,7 +131,7 @@
             // lbl_domain_id
             // 
             this.lbl_domain_id.AutoSize = true;
-            this.lbl_domain_id.Location = new System.Drawing.Point(275, 157);
+            this.lbl_domain_id.Location = new System.Drawing.Point(271, 176);
             this.lbl_domain_id.Name = "lbl_domain_id";
             this.lbl_domain_id.Size = new System.Drawing.Size(51, 13);
             this.lbl_domain_id.TabIndex = 11;
@@ -137,7 +140,7 @@
             // txt_domain_id
             // 
             this.txt_domain_id.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txt_domain_id.Location = new System.Drawing.Point(275, 173);
+            this.txt_domain_id.Location = new System.Drawing.Point(274, 192);
             this.txt_domain_id.Name = "txt_domain_id";
             this.txt_domain_id.Size = new System.Drawing.Size(120, 26);
             this.txt_domain_id.TabIndex = 10;
@@ -175,6 +178,7 @@
             this.txt_ip0.Name = "txt_ip0";
             this.txt_ip0.Size = new System.Drawing.Size(240, 20);
             this.txt_ip0.TabIndex = 15;
+            this.txt_ip0.Text = "127.0.0.1";
             // 
             // txt_ip1
             // 
@@ -182,6 +186,7 @@
             this.txt_ip1.Name = "txt_ip1";
             this.txt_ip1.Size = new System.Drawing.Size(240, 20);
             this.txt_ip1.TabIndex = 17;
+            this.txt_ip1.Text = "127.0.0.1";
             // 
             // lbl_target1
             // 
@@ -215,7 +220,7 @@
             // lbl_logs
             // 
             this.lbl_logs.AutoSize = true;
-            this.lbl_logs.Location = new System.Drawing.Point(539, 235);
+            this.lbl_logs.Location = new System.Drawing.Point(12, 301);
             this.lbl_logs.Name = "lbl_logs";
             this.lbl_logs.Size = new System.Drawing.Size(30, 13);
             this.lbl_logs.TabIndex = 21;
@@ -224,9 +229,10 @@
             // lst_logs
             // 
             this.lst_logs.FormattingEnabled = true;
-            this.lst_logs.Location = new System.Drawing.Point(318, 251);
+            this.lst_logs.HorizontalScrollbar = true;
+            this.lst_logs.Location = new System.Drawing.Point(12, 317);
             this.lst_logs.Name = "lst_logs";
-            this.lst_logs.Size = new System.Drawing.Size(470, 186);
+            this.lst_logs.Size = new System.Drawing.Size(776, 121);
             this.lst_logs.TabIndex = 22;
             // 
             // lbl_version
@@ -238,12 +244,42 @@
             this.lbl_version.TabIndex = 23;
             this.lbl_version.Text = "v.1.0.0";
             // 
+            // txt_domain
+            // 
+            this.txt_domain.Location = new System.Drawing.Point(274, 152);
+            this.txt_domain.Name = "txt_domain";
+            this.txt_domain.Size = new System.Drawing.Size(120, 20);
+            this.txt_domain.TabIndex = 24;
+            this.txt_domain.Text = "ihateadmins.tk";
+            // 
+            // lbl_domain
+            // 
+            this.lbl_domain.AutoSize = true;
+            this.lbl_domain.Location = new System.Drawing.Point(271, 136);
+            this.lbl_domain.Name = "lbl_domain";
+            this.lbl_domain.Size = new System.Drawing.Size(43, 13);
+            this.lbl_domain.TabIndex = 25;
+            this.lbl_domain.Text = "Domain";
+            // 
+            // btn_save
+            // 
+            this.btn_save.Location = new System.Drawing.Point(455, 248);
+            this.btn_save.Name = "btn_save";
+            this.btn_save.Size = new System.Drawing.Size(300, 50);
+            this.btn_save.TabIndex = 26;
+            this.btn_save.Text = "Save";
+            this.btn_save.UseVisualStyleBackColor = true;
+            this.btn_save.Click += new System.EventHandler(this.btn_save_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Aqua;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btn_save);
+            this.Controls.Add(this.lbl_domain);
+            this.Controls.Add(this.txt_domain);
             this.Controls.Add(this.lbl_version);
             this.Controls.Add(this.lst_logs);
             this.Controls.Add(this.lbl_logs);
@@ -296,6 +332,9 @@
         private System.Windows.Forms.Label lbl_logs;
         private System.Windows.Forms.ListBox lst_logs;
         private System.Windows.Forms.Label lbl_version;
+        private System.Windows.Forms.TextBox txt_domain;
+        private System.Windows.Forms.Label lbl_domain;
+        private System.Windows.Forms.Button btn_save;
     }
 }
 
