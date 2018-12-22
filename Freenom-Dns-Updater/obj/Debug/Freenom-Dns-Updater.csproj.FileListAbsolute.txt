@@ -1,0 +1,10 @@
+E:\SteamLibrary\steamapps\common\Rust\Rust_Server\Freenom-dns-updater\Freenom-Dns-Updater\Freenom-Dns-Updater\obj\Debug\Freenom-Dns-Updater.csprojAssemblyReference.cache
+E:\SteamLibrary\steamapps\common\Rust\Rust_Server\Freenom-dns-updater\Freenom-Dns-Updater\Freenom-Dns-Updater\obj\Debug\Freenom_Dns_Updater.Form1.resources
+E:\SteamLibrary\steamapps\common\Rust\Rust_Server\Freenom-dns-updater\Freenom-Dns-Updater\Freenom-Dns-Updater\obj\Debug\Freenom_Dns_Updater.Properties.Resources.resources
+E:\SteamLibrary\steamapps\common\Rust\Rust_Server\Freenom-dns-updater\Freenom-Dns-Updater\Freenom-Dns-Updater\obj\Debug\Freenom-Dns-Updater.csproj.GenerateResource.cache
+E:\SteamLibrary\steamapps\common\Rust\Rust_Server\Freenom-dns-updater\Freenom-Dns-Updater\Freenom-Dns-Updater\obj\Debug\Freenom-Dns-Updater.csproj.CoreCompileInputs.cache
+E:\SteamLibrary\steamapps\common\Rust\Rust_Server\Freenom-dns-updater\Freenom-Dns-Updater\Freenom-Dns-Updater\bin\Debug\Freenom-Dns-Updater.exe.config
+E:\SteamLibrary\steamapps\common\Rust\Rust_Server\Freenom-dns-updater\Freenom-Dns-Updater\Freenom-Dns-Updater\bin\Debug\Freenom-Dns-Updater.exe
+E:\SteamLibrary\steamapps\common\Rust\Rust_Server\Freenom-dns-updater\Freenom-Dns-Updater\Freenom-Dns-Updater\bin\Debug\Freenom-Dns-Updater.pdb
+E:\SteamLibrary\steamapps\common\Rust\Rust_Server\Freenom-dns-updater\Freenom-Dns-Updater\Freenom-Dns-Updater\obj\Debug\Freenom-Dns-Updater.exe
+E:\SteamLibrary\steamapps\common\Rust\Rust_Server\Freenom-dns-updater\Freenom-Dns-Updater\Freenom-Dns-Updater\obj\Debug\Freenom-Dns-Updater.pdb
