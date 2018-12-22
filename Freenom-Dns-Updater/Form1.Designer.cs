@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.btn_change = new System.Windows.Forms.Button();
             this.txt_email = new System.Windows.Forms.TextBox();
             this.lbl_email = new System.Windows.Forms.Label();
@@ -59,6 +60,7 @@
             this.btn_change.TabIndex = 0;
             this.btn_change.Text = "Change";
             this.btn_change.UseVisualStyleBackColor = true;
+            this.btn_change.Click += new System.EventHandler(this.btn_change_Click);
             // 
             // txt_email
             // 
@@ -263,9 +265,9 @@
             this.Controls.Add(this.lbl_email);
             this.Controls.Add(this.txt_email);
             this.Controls.Add(this.btn_change);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "Freenom-DNS-Updater by ihatedmins v.1.0.0";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
