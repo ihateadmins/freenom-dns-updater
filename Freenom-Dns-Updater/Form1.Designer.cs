@@ -53,6 +53,7 @@
             this.txt_domain = new System.Windows.Forms.TextBox();
             this.lbl_domain = new System.Windows.Forms.Label();
             this.btn_save = new System.Windows.Forms.Button();
+            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.SuspendLayout();
             // 
             // btn_change
@@ -271,12 +272,22 @@
             this.btn_save.UseVisualStyleBackColor = true;
             this.btn_save.Click += new System.EventHandler(this.btn_save_Click);
             // 
+            // webBrowser1
+            // 
+            this.webBrowser1.Location = new System.Drawing.Point(12, 12);
+            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser1.Name = "webBrowser1";
+            this.webBrowser1.Size = new System.Drawing.Size(743, 286);
+            this.webBrowser1.TabIndex = 27;
+            this.webBrowser1.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Aqua;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.webBrowser1);
             this.Controls.Add(this.btn_save);
             this.Controls.Add(this.lbl_domain);
             this.Controls.Add(this.txt_domain);
@@ -335,6 +346,7 @@
         private System.Windows.Forms.TextBox txt_domain;
         private System.Windows.Forms.Label lbl_domain;
         private System.Windows.Forms.Button btn_save;
+        private System.Windows.Forms.WebBrowser webBrowser1;
     }
 }
 
