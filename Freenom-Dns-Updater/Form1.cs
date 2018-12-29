@@ -143,8 +143,8 @@ namespace Freenom_Dns_Updater
         void login(string link)
         {
             //Browser vorbereiten
-            webBrowser1.Visible = true;
-            webBrowser1.ScriptErrorsSuppressed = true;
+            //webBrowser1.Visible = true;
+            //webBrowser1.ScriptErrorsSuppressed = true;
             //Website öffnen
             webBrowser1.Navigate(new Uri(link));
             while (webBrowser1.ReadyState != WebBrowserReadyState.Complete)
@@ -175,6 +175,11 @@ namespace Freenom_Dns_Updater
                                 if (element.GetAttribute("className") == "largeBtn primaryColor pullRight")
                                 {
                                     element.InvokeMember("click");
+                                    while (webBrowser1.ReadyState != WebBrowserReadyState.Complete)
+                                    {
+                                        Application.DoEvents();
+                                        lst_logs.Items.Add("versucht..");
+                                    }
                                 }
                             }
 

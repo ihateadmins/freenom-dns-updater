@@ -166,7 +166,7 @@ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga
 			
 			<div class="col-md-4 max-width form">
 				<form method="post" action="dologin.php" class="form-stacked">
-<input type="hidden" name="token" value="1f1f7bb95d939f029eaf481bad0b0c1c32058092" />
+<input type="hidden" name="token" value="37b1c9afa9a825b5a0d92677af67fa612155a93b" />
 						<div class="form-segment">
 							<strong>Sign in with your e-mail</strong>
 							<div class="control-group">
@@ -200,11 +200,11 @@ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga
 						</div>
 				</form>
 		        <form id="gl" action="/sociallogin.php" method="POST">
-<input type="hidden" name="token" value="1f1f7bb95d939f029eaf481bad0b0c1c32058092" />
+<input type="hidden" name="token" value="37b1c9afa9a825b5a0d92677af67fa612155a93b" />
 		            <input type="hidden" name="token_id" id="token_id" />
 		        </form>
 		        <form id="fl" action="/sociallogin.php" method="POST">
-<input type="hidden" name="token" value="1f1f7bb95d939f029eaf481bad0b0c1c32058092" />
+<input type="hidden" name="token" value="37b1c9afa9a825b5a0d92677af67fa612155a93b" />
 		            <input type="hidden" name="access_token" id="access_token" />
 		        </form>
 			</div>
