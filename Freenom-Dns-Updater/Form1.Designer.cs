@@ -53,20 +53,24 @@
             this.txt_domain = new System.Windows.Forms.TextBox();
             this.lbl_domain = new System.Windows.Forms.Label();
             this.btn_save = new System.Windows.Forms.Button();
-            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tab_dns = new System.Windows.Forms.TabPage();
+            this.cb_remember = new System.Windows.Forms.CheckBox();
+            this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tab_browser = new System.Windows.Forms.TabPage();
+            this.lbl_dns_ip_name = new System.Windows.Forms.Label();
+            this.lbl_dns_ip_value = new System.Windows.Forms.Label();
+            this.btn_folder = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tab_dns.SuspendLayout();
-            this.tab_browser.SuspendLayout();
+            this.tabControl2.SuspendLayout();
             this.SuspendLayout();
             // 
             // btn_change
             // 
-            this.btn_change.Location = new System.Drawing.Point(5, 239);
+            this.btn_change.Location = new System.Drawing.Point(7, 249);
             this.btn_change.Name = "btn_change";
-            this.btn_change.Size = new System.Drawing.Size(300, 50);
+            this.btn_change.Size = new System.Drawing.Size(100, 30);
             this.btn_change.TabIndex = 0;
             this.btn_change.Text = "Change";
             this.btn_change.UseVisualStyleBackColor = true;
@@ -111,7 +115,7 @@
             this.btn_exit.BackColor = System.Drawing.Color.Black;
             this.btn_exit.Font = new System.Drawing.Font("Arial", 18F);
             this.btn_exit.ForeColor = System.Drawing.Color.DarkRed;
-            this.btn_exit.Location = new System.Drawing.Point(750, 3);
+            this.btn_exit.Location = new System.Drawing.Point(640, 3);
             this.btn_exit.Name = "btn_exit";
             this.btn_exit.Size = new System.Drawing.Size(32, 32);
             this.btn_exit.TabIndex = 5;
@@ -207,21 +211,21 @@
             // cb_auto0
             // 
             this.cb_auto0.AutoSize = true;
-            this.cb_auto0.Location = new System.Drawing.Point(702, 146);
+            this.cb_auto0.Location = new System.Drawing.Point(432, 108);
             this.cb_auto0.Name = "cb_auto0";
-            this.cb_auto0.Size = new System.Drawing.Size(47, 17);
+            this.cb_auto0.Size = new System.Drawing.Size(64, 17);
             this.cb_auto0.TabIndex = 18;
-            this.cb_auto0.Text = "auto";
+            this.cb_auto0.Text = "auto ip0";
             this.cb_auto0.UseVisualStyleBackColor = true;
             // 
             // cb_auto1
             // 
             this.cb_auto1.AutoSize = true;
-            this.cb_auto1.Location = new System.Drawing.Point(702, 185);
+            this.cb_auto1.Location = new System.Drawing.Point(608, 108);
             this.cb_auto1.Name = "cb_auto1";
-            this.cb_auto1.Size = new System.Drawing.Size(47, 17);
+            this.cb_auto1.Size = new System.Drawing.Size(64, 17);
             this.cb_auto1.TabIndex = 19;
-            this.cb_auto1.Text = "auto";
+            this.cb_auto1.Text = "auto ip1";
             this.cb_auto1.UseVisualStyleBackColor = true;
             // 
             // lbl_logs
@@ -239,13 +243,13 @@
             this.lst_logs.HorizontalScrollbar = true;
             this.lst_logs.Location = new System.Drawing.Point(6, 308);
             this.lst_logs.Name = "lst_logs";
-            this.lst_logs.Size = new System.Drawing.Size(776, 121);
+            this.lst_logs.Size = new System.Drawing.Size(666, 186);
             this.lst_logs.TabIndex = 22;
             // 
             // lbl_version
             // 
             this.lbl_version.AutoSize = true;
-            this.lbl_version.Location = new System.Drawing.Point(771, 526);
+            this.lbl_version.Location = new System.Drawing.Point(647, 526);
             this.lbl_version.Name = "lbl_version";
             this.lbl_version.Size = new System.Drawing.Size(40, 13);
             this.lbl_version.TabIndex = 23;
@@ -270,34 +274,29 @@
             // 
             // btn_save
             // 
-            this.btn_save.Location = new System.Drawing.Point(449, 239);
+            this.btn_save.Location = new System.Drawing.Point(146, 249);
             this.btn_save.Name = "btn_save";
-            this.btn_save.Size = new System.Drawing.Size(300, 50);
+            this.btn_save.Size = new System.Drawing.Size(100, 30);
             this.btn_save.TabIndex = 26;
             this.btn_save.Text = "Save";
             this.btn_save.UseVisualStyleBackColor = true;
             this.btn_save.Click += new System.EventHandler(this.btn_save_Click);
             // 
-            // webBrowser1
-            // 
-            this.webBrowser1.Location = new System.Drawing.Point(6, 6);
-            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
-            this.webBrowser1.Name = "webBrowser1";
-            this.webBrowser1.Size = new System.Drawing.Size(793, 497);
-            this.webBrowser1.TabIndex = 27;
-            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tab_dns);
-            this.tabControl1.Controls.Add(this.tab_browser);
             this.tabControl1.Location = new System.Drawing.Point(1, 1);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(810, 526);
+            this.tabControl1.Size = new System.Drawing.Size(686, 526);
             this.tabControl1.TabIndex = 28;
             // 
             // tab_dns
             // 
+            this.tab_dns.Controls.Add(this.btn_folder);
+            this.tab_dns.Controls.Add(this.lbl_dns_ip_value);
+            this.tab_dns.Controls.Add(this.lbl_dns_ip_name);
+            this.tab_dns.Controls.Add(this.cb_remember);
             this.tab_dns.Controls.Add(this.lst_logs);
             this.tab_dns.Controls.Add(this.btn_save);
             this.tab_dns.Controls.Add(this.btn_change);
@@ -324,37 +323,85 @@
             this.tab_dns.Location = new System.Drawing.Point(4, 22);
             this.tab_dns.Name = "tab_dns";
             this.tab_dns.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_dns.Size = new System.Drawing.Size(802, 500);
+            this.tab_dns.Size = new System.Drawing.Size(678, 500);
             this.tab_dns.TabIndex = 0;
             this.tab_dns.Text = "DNS-Changer";
             this.tab_dns.UseVisualStyleBackColor = true;
             // 
+            // cb_remember
+            // 
+            this.cb_remember.AutoSize = true;
+            this.cb_remember.Location = new System.Drawing.Point(9, 216);
+            this.cb_remember.Name = "cb_remember";
+            this.cb_remember.Size = new System.Drawing.Size(89, 17);
+            this.cb_remember.TabIndex = 27;
+            this.cb_remember.Text = "remember me";
+            this.cb_remember.UseVisualStyleBackColor = true;
+            // 
+            // tabControl2
+            // 
+            this.tabControl2.Controls.Add(this.tab_browser);
+            this.tabControl2.Location = new System.Drawing.Point(693, 1);
+            this.tabControl2.Name = "tabControl2";
+            this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.Size = new System.Drawing.Size(289, 525);
+            this.tabControl2.TabIndex = 29;
+            // 
             // tab_browser
             // 
-            this.tab_browser.Controls.Add(this.webBrowser1);
             this.tab_browser.Location = new System.Drawing.Point(4, 22);
             this.tab_browser.Name = "tab_browser";
             this.tab_browser.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_browser.Size = new System.Drawing.Size(802, 500);
-            this.tab_browser.TabIndex = 1;
+            this.tab_browser.Size = new System.Drawing.Size(281, 499);
+            this.tab_browser.TabIndex = 0;
             this.tab_browser.Text = "Browser";
             this.tab_browser.UseVisualStyleBackColor = true;
+            // 
+            // lbl_dns_ip_name
+            // 
+            this.lbl_dns_ip_name.AutoSize = true;
+            this.lbl_dns_ip_name.Location = new System.Drawing.Point(35, 3);
+            this.lbl_dns_ip_name.Name = "lbl_dns_ip_name";
+            this.lbl_dns_ip_name.Size = new System.Drawing.Size(48, 13);
+            this.lbl_dns_ip_name.TabIndex = 28;
+            this.lbl_dns_ip_name.Text = "DNS | IP";
+            // 
+            // lbl_dns_ip_value
+            // 
+            this.lbl_dns_ip_value.AutoSize = true;
+            this.lbl_dns_ip_value.Location = new System.Drawing.Point(7, 22);
+            this.lbl_dns_ip_value.Name = "lbl_dns_ip_value";
+            this.lbl_dns_ip_value.Size = new System.Drawing.Size(128, 13);
+            this.lbl_dns_ip_value.TabIndex = 29;
+            this.lbl_dns_ip_value.Text = "ihateadmins.tk | 127.0.0.1";
+            // 
+            // btn_folder
+            // 
+            this.btn_folder.Location = new System.Drawing.Point(307, 253);
+            this.btn_folder.Name = "btn_folder";
+            this.btn_folder.Size = new System.Drawing.Size(174, 23);
+            this.btn_folder.TabIndex = 30;
+            this.btn_folder.Text = "open Directory";
+            this.btn_folder.UseVisualStyleBackColor = true;
+            this.btn_folder.Click += new System.EventHandler(this.btn_folder_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Aqua;
-            this.ClientSize = new System.Drawing.Size(813, 538);
+            this.ClientSize = new System.Drawing.Size(984, 538);
+            this.Controls.Add(this.tabControl2);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.lbl_version);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "Freenom-DNS-Updater by ihatedmins v.1.0.0";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
             this.tab_dns.ResumeLayout(false);
             this.tab_dns.PerformLayout();
-            this.tab_browser.ResumeLayout(false);
+            this.tabControl2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -386,10 +433,14 @@
         private System.Windows.Forms.TextBox txt_domain;
         private System.Windows.Forms.Label lbl_domain;
         private System.Windows.Forms.Button btn_save;
-        private System.Windows.Forms.WebBrowser webBrowser1;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tab_dns;
+        private System.Windows.Forms.CheckBox cb_remember;
+        private System.Windows.Forms.TabControl tabControl2;
         private System.Windows.Forms.TabPage tab_browser;
+        private System.Windows.Forms.Label lbl_dns_ip_value;
+        private System.Windows.Forms.Label lbl_dns_ip_name;
+        private System.Windows.Forms.Button btn_folder;
     }
 }
 

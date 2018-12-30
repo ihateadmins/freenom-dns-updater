@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -10,8 +11,11 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
-
+using Gecko;
+using Gecko.DOM;
+using Gecko.Events;
 
 namespace Freenom_Dns_Updater
 {
@@ -21,9 +25,18 @@ namespace Freenom_Dns_Updater
         string website = "https://my.freenom.com/clientarea.php?action=domains";
         string config = "freenom.cfg";
         bool loggedin = false;
+        int pagenumber;
+        bool execute = true;
+        int timebuffer_minuteb;
+        bool timetrigger = true;
+        int futuretime;
+        GeckoWebBrowser browser = new GeckoWebBrowser { Dock = DockStyle.Fill };
+
         public Form1()
         {
             InitializeComponent();
+            Xpcom.EnableProfileMonitoring = false;
+            Xpcom.Initialize("Firefox");
             version = Application.ProductVersion.ToString();
             lbl_version.Text = version;
 
@@ -58,6 +71,66 @@ namespace Freenom_Dns_Updater
 
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            tab_browser.Controls.Add(browser);
+            Task mytask = Task.Run(() =>
+            {
+                get_dns_ip_loop();
+                MethodInvoker inv = delegate
+                {
+                    this.lbl_dns_ip_value.Text = domain + " | " + Dns.GetHostAddresses(domain).ToString();
+                    this.lst_logs.Items.Add(Dns.GetHostAddresses(domain)[0].ToString());
+                };
+                this.Invoke(inv);
+                lst_logs.Items.Add("loop end");
+            });
+        }
+        
+        void get_dns_ip_loop()
+        {
+            while (true)
+            {
+                //string time = DateTime.Now.ToString("HH:mm:ss");
+                
+                int time_minute = DateTime.Now.Minute;
+                if (timetrigger)
+                {
+                    timebuffer_minuteb = DateTime.Now.Minute;
+                    timetrigger = false;
+                }
+
+                if(timebuffer_minuteb >= 58)
+                {
+                    futuretime = timebuffer_minuteb - 58;
+                }
+                else
+                {
+                    futuretime = timebuffer_minuteb;
+                }
+                if (time_minute >= 58)
+                {
+                    time_minute -= 59;
+                }
+
+                //if (time_minute > futuretime +1)
+                if (time_minute > futuretime)
+                {
+                    MethodInvoker inv = delegate
+                    {
+                        this.browser.DocumentCompleted += this.OnDocumentCompleted;
+                        this.detectpage();
+                        //this.lst_logs.Items.Add("current ip: " + Dns.GetHostAddresses("ihateadmins.tk")[0].ToString());
+                        this.lst_logs.Items.Add("current ip: " + Dns.GetHostAddresses(this.txt_domain.Text)[0].ToString());
+                        this.lbl_dns_ip_value.Text = this.txt_domain.Text + " | " + Dns.GetHostAddresses(this.txt_domain.Text)[0].ToString();
+                    };
+                    this.Invoke(inv);
+                    timetrigger = true;
+                }
+                //t2.Stop();
+                //}
+            }
+        }
 
         void readtextboxes()
         {
@@ -99,123 +172,193 @@ namespace Freenom_Dns_Updater
             Application.Exit();
         }
 
-        void update()
+        bool pageloaded;
+
+        private void btn_folder_Click(object sender, EventArgs e)
         {
-            while (webBrowser1.ReadyState != WebBrowserReadyState.Complete)
-            {
-                Application.DoEvents();
-            }
-            lst_logs.Items.Add("logged in Phase 2");
-            string[] formdata = {"records[0][name]", "records[0][value]", "records[1][name]", "records[1][value]"};
-            string[] postdata = {subdomain0, ip0, subdomain1, ip1};
+            Process.Start(Application.StartupPath.ToString());
+        }
 
-            if (webBrowser1.Document != null)
+        private void OnDocumentCompleted(object sender, GeckoDocumentCompletedEventArgs e)
+        {
+            pageloaded = true;
+        }
+
+        bool error_display = true;
+        void freenom_responses(object sender, EventArgs e)
+        {
+            if (error_display)
             {
-                HtmlElementCollection elems = webBrowser1.Document.GetElementsByTagName("input");
-                foreach (HtmlElement elem in elems)
+                string[] freenom_responses = { "Record modified successfully", "There were no changes", "Error occured: Invalid value in dnsrecord", "" };
+                //There were no changes
+                //Error occured: Invalid value in dnsrecord
+                //Record modified successfully
+
+                //var dnserror0 = new GeckoInputElement(browser.Document.GetElementsByClassName("dnserror")[0].DomObject);
+                //var dnserror1 = new GeckoInputElement(browser.Document.GetElementsByClassName("dnserror")[1].DomObject);
+                if (browser.Document.Body.OuterHtml.Contains("Record modified successfully"))
                 {
-                    String nameStr = elem.GetAttribute("name");
+                    lst_logs.Items.Add("Record modified successfully");
+                }
 
-                    if (nameStr == formdata[0])//leer
+                if (browser.Document.Body.OuterHtml.Contains("There were no changes"))
+                {
+                    lst_logs.Items.Add("There were no changes");
+                }
+
+                if (browser.Document.Body.OuterHtml.Contains("Error occured: Invalid value in dnsrecord"))
+                {
+                    lst_logs.Items.Add("Error occured: Invalid value in dnsrecord");
+                }
+                error_display = false;
+            }
+        }
+
+        void detectpage()//1=login page , 2=dns-managment page
+        {
+            if (File.Exists("rawhtml.html")){File.Delete("rawhtml.html");}
+            string rawHtml = browser.Document.Body.OuterHtml;//webBrowser1.Document.Body.OuterHtml;
+            //string[] lines = { rawHtml };
+            //System.IO.File.WriteAllLines("rawhtml.txt", lines);
+            if (rawHtml.Contains("Sign in with your e-mail") || rawHtml.Contains("Sign in"))
+            {
+                lst_logs.Items.Add("Sign in with your e - mail detected");
+                pagenumber = 1;
+            }
+            else
+            {
+                if (rawHtml.Contains("DNS MANAGEMENT for " + domain))
+                {
+                    if (!execute)
                     {
-                        webBrowser1.Document.GetElementById(nameStr).SetAttribute("value", postdata[0]);
-                        lst_logs.Items.Add("Logging in");
+                        lst_logs.Items.Add("Updating Freenom DNS can take up to 5min");
                     }
                     else
                     {
-                        if (nameStr == formdata[1])
+                        //System.IO.File.WriteAllLines("rawhtml.html", lines);
+                        lst_logs.Items.Add("DNS MANAGEMENT for " + domain + " page");
+                        loggedin = true;
+                        pagenumber = 2;
+                    }
+                    if (rawHtml.Contains("dnserror") && loggedin)
+                    {
+                        System.Windows.Forms.Timer t3 = new System.Windows.Forms.Timer();
+                        //to stop The Timer: t.Stop();
+                        t3.Interval = 100;
+                        t3.Tick += new EventHandler(freenom_responses);
+                        t3.Start();
+                        if (error_display == false)
                         {
-                            webBrowser1.Document.GetElementById(nameStr).SetAttribute("value", postdata[1]);
-                            HtmlElementCollection classButton = webBrowser1.Document.All;
-                            foreach (HtmlElement element in classButton)
-                            {
-                                if (element.GetAttribute("className") == "smallBtn primaryColor")
-                                {
-                                    element.InvokeMember("click");
-                                }
-                            }
+                            t3.Stop();
                         }
                     }
+                }
+                else
+                {
+                    lst_logs.Items.Add("exception no sign in detected");
                 }
             }
         }
 
-        void login(string link)
+        void timer_Tick(object sender, EventArgs e)
         {
-            //Browser vorbereiten
-            //webBrowser1.Visible = true;
+            if (execute)
+            {
+                var dnschangebutton = new GeckoInputElement(browser.Document.GetElementsByClassName("smallBtn primaryColor")[1].DomObject);
+                dnschangebutton.Click();
+                lst_logs.Items.Add("dns changed...");
+                execute = false;
+            }
+        }
+
+        void update()
+        {
+            browser.DocumentCompleted += OnDocumentCompleted;
+            detectpage();
+            if (pagenumber == 2)//loginpage
+            {
+                string[] formdata = { "records[0][name]", "records[0][value]", "records[1][name]", "records[1][value]" };
+                string[] postdata = { subdomain0, ip0, subdomain1, ip1 };
+
+                var browser_entry_subdomain0 = new GeckoInputElement(browser.Document.GetElementsByName(formdata[0])[0].DomObject);
+                browser_entry_subdomain0.Value = postdata[0];
+                lst_logs.Items.Add("subdomain0 entered");
+
+                var browser_entry_ip0 = new GeckoInputElement(browser.Document.GetElementsByName(formdata[1])[0].DomObject);
+                browser_entry_ip0.Value = postdata[1];
+                lst_logs.Items.Add("ip0 entered");
+
+                var browser_entry_subdomain1 = new GeckoInputElement(browser.Document.GetElementsByName(formdata[2])[0].DomObject);
+                browser_entry_subdomain1.Value = postdata[2];
+                lst_logs.Items.Add("subdomain1 entered");
+
+                var browser_entry_ip1 = new GeckoInputElement(browser.Document.GetElementsByName(formdata[3])[0].DomObject);
+                browser_entry_ip1.Value = postdata[3];
+                lst_logs.Items.Add("ip1 entered");
+
+                System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
+                //to stop The Timer: t.Stop();
+                t.Interval = 2000; // specify interval time as you want
+                t.Tick += new EventHandler(timer_Tick);
+                t.Start();
+                if(execute == false)
+                {
+                    t.Stop();
+                    execute = true;
+                }
+
+            }
+        }
+
+        void login()
+        {
             //webBrowser1.ScriptErrorsSuppressed = true;
             //Website öffnen
-            webBrowser1.Navigate(new Uri(link));
-            while (webBrowser1.ReadyState != WebBrowserReadyState.Complete)
-            {
-                Application.DoEvents();
-            }
+            //webBrowser1.Navigate(new Uri(link));
 
-            if (webBrowser1.Document != null)
+            browser.DocumentCompleted += OnDocumentCompleted;
+            if (pageloaded)
             {
-                HtmlElementCollection elems = webBrowser1.Document.GetElementsByTagName("input");
-                foreach (HtmlElement elem in elems)
+                pageloaded = false;
+                detectpage();
+                if (pagenumber == 1)//loginpage
                 {
-                    String nameStr = elem.GetAttribute("name");
-
-                    if (nameStr == "username")
+                    lst_logs.Items.Add("page loaded - ready");
+                    /*if (cb_remember.Checked)
                     {
-                        webBrowser1.Document.GetElementById(nameStr).SetAttribute("value", email);
-                        lst_logs.Items.Add("Logging in");
+                        var browser_login_rememberme = new GeckoInputElement(browser.Document.GetElementById("rememberMe").DomObject);
+                        browser_login_rememberme.Click();
+                        lst_logs.Items.Add("remember me checked");
+                    }*/
+                    var browser_login_id = new GeckoInputElement(browser.Document.GetElementById("username").DomObject);
+                    //new GeckoInputElement(browser.Document.GetElementsByName("username")[0].DomObject).Value = email;
+                    browser_login_id.Value = email;
+                    lst_logs.Items.Add("entered login");
+
+                    var browser_login_pw = new GeckoInputElement(browser.Document.GetElementById("password").DomObject);
+                    browser_login_pw.Value = password;
+                    lst_logs.Items.Add("entered password");
+
+                    var buttonAnmelden = new GeckoInputElement(browser.Document.GetElementsByClassName("largeBtn primaryColor pullRight")[0].DomObject);
+                    buttonAnmelden.Click();
+                    lst_logs.Items.Add("Logging in...");
+                }
+                else
+                {
+                    if (pagenumber == 2 && loggedin)//dns-managment
+                    {
+                        update();
                     }
                     else
                     {
-                        if (nameStr == "password")
-                        {
-                            webBrowser1.Document.GetElementById(nameStr).SetAttribute("value", password);
-                            HtmlElementCollection classButton = webBrowser1.Document.All;
-                            foreach (HtmlElement element in classButton)
-                            {
-                                if (element.GetAttribute("className") == "largeBtn primaryColor pullRight")
-                                {
-                                    element.InvokeMember("click");
-                                    while (webBrowser1.ReadyState != WebBrowserReadyState.Complete)
-                                    {
-                                        Application.DoEvents();
-                                        lst_logs.Items.Add("versucht..");
-                                    }
-                                }
-                            }
-
-                            if (File.Exists("rawhtml.html"))
-                            {
-                                File.Delete("rawhtml.html");
-                            }
-                            string rawHtml = webBrowser1.DocumentText;//webBrowser1.Document.Body.OuterHtml;
-                            string[] lines = { rawHtml };
-                            System.IO.File.WriteAllLines("rawhtml.txt", lines);
-
-                            //int j = Environment.TickCount;
-                            //while (rawHtml.Contains("Sign in with your e-mail") || Environment.TickCount < j + 35000) ; //wait five seconds.. 
-                            //while (webBrowser1.ReadyState != WebBrowserReadyState.Complete) Application.DoEvents();
-
-                            if (rawHtml.Contains("Sign in with your e-mail") || rawHtml.Contains("Sign in"))
-                            {
-                                lst_logs.Items.Add("Sign in with your e - mail detected");
-                            }
-                            else
-                            {
-                                if (rawHtml.Contains("DNS MANAGEMENT for " + domain) || webBrowser1.Url == new Uri("https://my.freenom.com/clientarea.php?managedns="+ domain +"&domainid=" + domainid) )
-                                {
-                                    System.IO.File.WriteAllLines("rawhtml.html", lines);
-                                    lst_logs.Items.Add("rawhtml.html created");
-                                    lst_logs.Items.Add("Logged in");
-                                    loggedin = true;
-                                }
-                                else
-                                {
-                                    lst_logs.Items.Add("exception no sign in detected");
-                                }
-                            }
-                        }
+                        lst_logs.Items.Add("exception pagenumber unknown:" + pagenumber);
                     }
                 }
+            }
+            else
+            {
+                browser.Navigate(website);
+                lst_logs.Items.Add("page not loaded");
             }
         }
 
@@ -223,7 +366,21 @@ namespace Freenom_Dns_Updater
         {
             lst_logs.Items.Clear();
             readtextboxes();
-            if (domainid == "")
+            //lst_logs.Items.Add("Started loop");
+            //Task mytask = Task.Run(() =>
+            //{
+            /*MethodInvoker inv = delegate
+            {
+                this.lst_logs.Items.Add(Dns.GetHostAddresses("ihateadmins.tk")[0].ToString());
+            };
+            this.Invoke(inv);*/
+
+            //get_dns_ip_loop();
+            //lst_logs.Items.Add("loop end");
+            //});
+            //lst_logs.Items.Add(Dns.GetHostAddresses("ihateadmins.tk")[0].ToString());
+
+            if (domainid == "" || domainid=="1234567890")
             {
                 System.Diagnostics.Process.Start(website);
                 lst_logs.Items.Add("Website opened");
@@ -233,159 +390,7 @@ namespace Freenom_Dns_Updater
             else
             {   //https://my.freenom.com/clientarea.php?managedns=ihateadmins.tk&domainid=123456789
                 website = "https://my.freenom.com/clientarea.php?managedns=" + domain + "&domainid=" + domainid;
-                login(website);
-                if(loggedin)
-                {
-                    webBrowser1.Navigate(new Uri(website));
-                    update();
-                }
-                //System.Diagnostics.Process.Start(website);
-
-                //webBrowser1.Visible = true;
-                //webBrowser1.ScriptErrorsSuppressed = true;
-                //webBrowser1.Url = new Uri(website);
-                //webBrowser1.Navigate(new Uri(website));
-                /*
-                string postData = "username=" + email + "&password=" + password;
-                System.Text.Encoding encoding = System.Text.Encoding.UTF8;
-                byte[] bytes = encoding.GetBytes(postData);
-                webBrowser1.Navigate(website, string.Empty, bytes, "Content-Type: application/x-www-form-urlencoded");*/
-
-                /*while (webBrowser1.ReadyState != WebBrowserReadyState.Complete)
-                {
-                    Application.DoEvents();
-                }*/
-                //if (webBrowser1.Document != null)
-                //{
-                //    HtmlElementCollection elems = webBrowser1.Document.GetElementsByTagName("input");
-                //    foreach (HtmlElement elem in elems)
-                //    {
-                //        String nameStr = elem.GetAttribute("name");
-
-                //        if (nameStr == "username")
-                //        {
-                //            webBrowser1.Document.GetElementById(nameStr).SetAttribute("value", email);
-                //            lst_logs.Items.Add("Logging in");
-                //        }
-                //        else
-                //        {
-                //            if (nameStr == "password")
-                //            {
-                //                webBrowser1.Document.GetElementById(nameStr).SetAttribute("value", password);
-                //                HtmlElementCollection classButton = webBrowser1.Document.All;
-                //                foreach (HtmlElement element in classButton)
-                //                {
-                //                    if (element.GetAttribute("className") == "largeBtn primaryColor pullRight")
-                //                    {
-                //                        element.InvokeMember("click");
-                //                        break;
-                //                    }
-                //                }
-
-                //            if (File.Exists("rawhtml.html"))
-                //            {
-                //                File.Delete("rawhtml.html");
-                //            }
-                //            string rawHtml = webBrowser1.DocumentText;//webBrowser1.Document.Body.OuterHtml;
-                //            string[] lines = {rawHtml};
-                //            System.IO.File.WriteAllLines("rawhtml.txt", lines);
-
-                //            if (rawHtml.Contains("Sign in with your e-mail"))
-                //            {
-                //                lst_logs.Items.Add("Sign in with your e - mail detected");
-                //            }
-                //            else
-                //            {
-                //                lst_logs.Items.Add("exception no sign in");
-                //                if (rawHtml.Contains("DNS MANAGEMENT for ihateadmins.tk"))
-                //                {
-                //                    System.IO.File.WriteAllLines("rawhtml.html", lines);
-                //                    lst_logs.Items.Add("rawhtml.html created");
-                //                    lst_logs.Items.Add("Logged in");
-                //                    loggedin = true;
-                //                    break;
-                //                }
-                //            }
-
-                //            if (loggedin)
-                //            {
-                //                lst_logs.Items.Add("Phase 2");
-                //                    //break;
-                //                    if (nameStr == "records[0][name]")//leer
-                //                    {
-                //                        //webBrowser1.Document.GetElementById(nameStr).SetAttribute("value", subdomain1);
-                //                        webBrowser1.Document.GetElementById(nameStr).SetAttribute("value", "plskappa");
-                //                        lst_logs.Items.Add("subdomain1 updated");
-                //                    }
-                //                    else
-                //                    {
-                //                        lst_logs.Items.Add("error");
-                //                        if (nameStr == "records[1][value]")
-                //                        {
-                //                            webBrowser1.Document.GetElementById(nameStr).SetAttribute("value", ip1);
-                //                            lst_logs.Items.Add("subdomain1 ip updated");
-                //                            //HtmlElementCollection classButton = webBrowser1.Document.All;
-                //                            //foreach (HtmlElement element in classButton)
-                //                            //{
-                //                            //    if (element.GetAttribute("className") == "smallBtn primaryColor")
-                //                            //    {
-                //                            //        element.InvokeMember("click");
-                //                            //        lst_logs.Items.Add("row updated");
-                //                            //        updated = true;
-                //                            //        break;
-                //                            //    }
-                //                            //}
-                //                            //lst_logs.Items.Add("Phase 3 bye");
-                //                            //if (updated)
-                //                            //    break;
-                //                        }
-                //                    }
-                //                }
-
-                //            }
-                //        }
-                //    }
-                //}
-
-
-                //var client = new HttpClient();
-                //var pairs = new List<KeyValuePair<string, string>>
-                //{
-                //new KeyValuePair<string, string>("username", email),
-                //new KeyValuePair<string, string>("password", password)
-                //};
-
-                //var content = new FormUrlEncodedContent(pairs);
-                //var response = client.PostAsync(website, content).Result;
-                ///*if (response.IsSuccessStatusCode)
-                //{
-                //}*/
-                //string[] lines = { response.ToString() };
-                //System.IO.File.WriteAllLines("response.html", lines);
-
-                //var pairs2 = new List<KeyValuePair<string, string>>
-                //{
-                //new KeyValuePair<string, string>("records[0][name]", subdomain0),
-                //new KeyValuePair<string, string>("records[0][value]", ip0),
-                //new KeyValuePair<string, string>("records[1][name]", subdomain1),
-                //new KeyValuePair<string, string>("records[1][value]", ip1)
-                //};
-                //var content2 = new FormUrlEncodedContent(pairs2);
-                //var response2 = client.PostAsync(website, content2).Result;
-                //string[] lines2 = { response2.ToString() };
-                //System.IO.File.WriteAllLines("response2.html", lines2);
-
-
-
-                //string[] lines = {result};
-                //System.IO.File.WriteAllLines(config, lines);
-                //anmelden
-                //sendRequest(website, "POST", String.Format("username={0}&password={1}", email, password));
-                //update eintrag
-                //sendRequest(website, "POST", String.Format("records[0][name]={0} & records[0][value]={1} & records[1][name]={2} & records[1][value]={3}", subdomain0, ip0, subdomain1, ip1));
-                //var client = new WebClient();
-                //client.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 7.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
-                //var content = client.DownloadString(website);
+                login();
             }
         }
     }

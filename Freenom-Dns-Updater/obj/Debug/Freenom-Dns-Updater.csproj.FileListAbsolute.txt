@@ -8,3 +8,8 @@ E:\SteamLibrary\steamapps\common\Rust\Rust_Server\Freenom-dns-updater\Freenom-Dn
 E:\SteamLibrary\steamapps\common\Rust\Rust_Server\Freenom-dns-updater\Freenom-Dns-Updater\Freenom-Dns-Updater\bin\Debug\Freenom-Dns-Updater.pdb
 E:\SteamLibrary\steamapps\common\Rust\Rust_Server\Freenom-dns-updater\Freenom-Dns-Updater\Freenom-Dns-Updater\obj\Debug\Freenom-Dns-Updater.exe
 E:\SteamLibrary\steamapps\common\Rust\Rust_Server\Freenom-dns-updater\Freenom-Dns-Updater\Freenom-Dns-Updater\obj\Debug\Freenom-Dns-Updater.pdb
+E:\SteamLibrary\steamapps\common\Rust\Rust_Server\Freenom-dns-updater\Freenom-Dns-Updater\Freenom-Dns-Updater\bin\Debug\Geckofx-Core.dll
+E:\SteamLibrary\steamapps\common\Rust\Rust_Server\Freenom-dns-updater\Freenom-Dns-Updater\Freenom-Dns-Updater\bin\Debug\Geckofx-Winforms.dll
+E:\SteamLibrary\steamapps\common\Rust\Rust_Server\Freenom-dns-updater\Freenom-Dns-Updater\Freenom-Dns-Updater\bin\Debug\Geckofx-Core.pdb
+E:\SteamLibrary\steamapps\common\Rust\Rust_Server\Freenom-dns-updater\Freenom-Dns-Updater\Freenom-Dns-Updater\bin\Debug\Geckofx-Winforms.pdb
+E:\SteamLibrary\steamapps\common\Rust\Rust_Server\Freenom-dns-updater\Freenom-Dns-Updater\Freenom-Dns-Updater\obj\Debug\Freenom-Dns-Updater.csproj.CopyComplete

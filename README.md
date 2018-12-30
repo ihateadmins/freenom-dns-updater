@@ -3,7 +3,6 @@ C# Freenom Dns Updater
 This Project/Programm is for anyone who just wants a free simple ip update Tool for your sub domain on Freenom.
 
 to be added:
--dns ip update
 -auto ip updater
 
 optional:
@@ -16,3 +15,6 @@ v.1.0.0 22.12.2018
 +config/save
 +logs
 +login to freenom
++GeckoWebBrowser
++dns ip update
++dns ip resolver every 1-3min
